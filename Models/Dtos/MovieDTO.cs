@@ -3,7 +3,7 @@
 using MovieCardsAPI.Models.Entities;
 
 namespace MovieCardsAPI.Models.Dtos {
-    public record MovieDto(long Id, string Title, short Rating, DateTime ReleaseDate, string Description);
+    public record MovieDto(long Id, string Title, short Rating, DateTime ReleaseDate, string Description, string DirectorName);
 
     public class MovieDetailsDTO {
         public long Id { get; set; }

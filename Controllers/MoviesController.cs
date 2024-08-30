@@ -29,23 +29,8 @@ namespace MovieCardsAPI.Controllers {
         // GET: api/Movies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies() {
-
-            //var res = await _context.Student.Include(s => s.Courses).ToListAsync();
-            //var res2 = await _context.Student.Include(s => s.Enrollments).ThenInclude(e => e.Course).ToListAsync();
-            //Not Address
-            // return await _context.Student.ToListAsync();
-
-            //Include Address
-            //return await _context.Student.Include(s => s.Address).ToListAsync();
-
-            //Transform to DTO, no need for include!
-            // var dto = includeCourses ? "" : "";
-
-            var dto = _context.Movies/*.Include(s => s.Address)*/.Select(s => new MovieDto(s.Id, s.Title, s.Rating, s.ReleaseDate, s. Description));
+            var dto = _context.Movies.Select(s => new MovieDto(s.Id, s.Title, s.Rating, s.ReleaseDate, s.Description, s.Director.Name));
             return Ok(await dto.ToListAsync());
-
-
-            //return await _context.Movies.ToListAsync();
         }
 
         // GET: api/Movies/5
@@ -57,55 +42,31 @@ namespace MovieCardsAPI.Controllers {
         [SwaggerResponse(StatusCodes.Status200OK, "The movie was found", Type = typeof(MovieDto))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "The movie was not found")]
         public async Task<ActionResult<MovieDto>> GetMovie(long id) {
-
-            //var r1 = await _context.Student.Include(s => s.Enrollments).ThenInclude(e => e.Course).ToListAsync();
-            //var r2 = await _context.Course.Include(c => c.CourseBooks).ToListAsync();
-
-            //var dto = await _context.Student
-            //    .Where(s => s.Id == id)
-            //    .Select(s => new StudentDetailsDto
-            //    {
-            //        Id = s.Id,
-            //        AddressCity = s.Address.City,
-            //        Avatar = s.Avatar,
-            //        Courses = s.Enrollments.Select(e => new CourseDto(e.Course.Title, e.Grade)),
-            //        FullName = s.FullName
-            //    })
-            //   .FirstOrDefaultAsync();
-
-
             var dto = await mapper.ProjectTo<MovieDto>(_context.Movies.Where(s => s.Id == id)).FirstOrDefaultAsync();
-
-            //var dto = await _context.Student
-            //.Where(s => s.Id == id)
-            //.ProjectTo<StudentDetailsDto>(mapper.ConfigurationProvider)
-            //.FirstOrDefaultAsync();
 
             if (dto == null) {
                 return NotFound();
             }
-
             return Ok(dto);
-
-
-            /*var movie = await _context.Movies.FindAsync(id);
-
-            if (movie == null) {
-                return NotFound();
-            }
-
-            return movie;*/
         }
 
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(long id, Movie movie) {
-            if (id != movie.Id) {
+        public async Task<IActionResult> PutMovie(long id, MovieForUpdateDTO dto) {
+
+            if (id != dto.Id) {
                 return BadRequest();
             }
 
-            _context.Entry(movie).State = EntityState.Modified;
+
+            var movieFromDB = await _context.Movies.Include(s => s.Director).FirstOrDefaultAsync(s => s.Id == id);
+
+            if ((movieFromDB is null)) {
+                return NotFound();
+            }
+
+            mapper.Map(dto, movieFromDB);
 
             try {
                 await _context.SaveChangesAsync();
@@ -124,33 +85,30 @@ namespace MovieCardsAPI.Controllers {
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<MovieDto>> PostMovie(MovieForCreationDTO dto) {
-
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest();
-            //}
-
-           
-
             var movie = mapper.Map<Movie>(dto);
 
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 
+            //Mapper breaks here, meaning the movie gets created but not messaged back
             var movieDTO = mapper.Map<MovieDto>(movie);
 
             return CreatedAtAction(nameof(GetMovie), new { id = movieDTO.Id }, movieDTO);
-
-
-            /*_context.Movies.Add(movie);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);*/
         }
 
         // DELETE: api/Movies/5
+        /// <summary>
+        /// Deleta a movie row from the database
+        /// </summary>
+        /// <param name="id">The id of the movie to delete</param>
+        /// <returns>An HTTP 204 No Content response successfully deleted</returns>
+        /// <response code="204">The movie was deleted</response>
+        /// <response code="404">The movie was not found</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteMovie(long id) {
+
             var movie = await _context.Movies.FindAsync(id);
             if (movie == null) {
                 return NotFound();
