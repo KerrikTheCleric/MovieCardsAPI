@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MovieCardsAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class MyFirstMigration : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,7 +56,8 @@ namespace MovieCardsAPI.Migrations
                 name: "ContactInformation",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DirectorId = table.Column<long>(type: "bigint", nullable: false)
@@ -65,8 +66,8 @@ namespace MovieCardsAPI.Migrations
                 {
                     table.PrimaryKey("PK_ContactInformation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ContactInformation_Director_Id",
-                        column: x => x.Id,
+                        name: "FK_ContactInformation_Director_DirectorId",
+                        column: x => x.DirectorId,
                         principalTable: "Director",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -147,6 +148,12 @@ namespace MovieCardsAPI.Migrations
                 name: "IX_ActorMovie_MoviesId",
                 table: "ActorMovie",
                 column: "MoviesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContactInformation_DirectorId",
+                table: "ContactInformation",
+                column: "DirectorId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_GenreMovie_MoviesId",

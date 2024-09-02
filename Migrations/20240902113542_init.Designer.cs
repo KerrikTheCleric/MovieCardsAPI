@@ -12,8 +12,8 @@ using MovieCardsAPI.Models;
 namespace MovieCardsAPI.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20240829113153_MyFirstMigration")]
-    partial class MyFirstMigration
+    [Migration("20240902113542_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,7 +77,10 @@ namespace MovieCardsAPI.Migrations
             modelBuilder.Entity("MovieCardsAPI.Models.Entities.ContactInformation", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("DirectorId")
                         .HasColumnType("bigint");
@@ -89,6 +92,9 @@ namespace MovieCardsAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DirectorId")
+                        .IsUnique();
 
                     b.ToTable("ContactInformation");
                 });
@@ -194,7 +200,7 @@ namespace MovieCardsAPI.Migrations
                 {
                     b.HasOne("MovieCardsAPI.Models.Entities.Director", "Director")
                         .WithOne("ContactInformation")
-                        .HasForeignKey("MovieCardsAPI.Models.Entities.ContactInformation", "Id")
+                        .HasForeignKey("MovieCardsAPI.Models.Entities.ContactInformation", "DirectorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

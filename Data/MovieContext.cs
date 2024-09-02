@@ -11,10 +11,8 @@ public class MovieContext : DbContext {
     public DbSet<Movie> Movies { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<Director>().HasOne(a => a.ContactInformation)
-        .WithOne(b => b.Director)
-        .HasForeignKey<ContactInformation>(b => b.Id);
+        modelBuilder.Entity<Director>().HasOne(director => director.ContactInformation)
+        .WithOne(contactInformation => contactInformation.Director)
+        .HasForeignKey<ContactInformation>(contactInformation => contactInformation.DirectorId);
     }
-
-
 }

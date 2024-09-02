@@ -90,8 +90,9 @@ namespace MovieCardsAPI.Controllers {
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 
+            var createdMovie = await _context.Movies.Include(m => m.Director).FirstOrDefaultAsync(m => m.Id ==movie.Id);
             //Mapper breaks here, meaning the movie gets created but not messaged back
-            var movieDTO = mapper.Map<MovieDto>(movie);
+            var movieDTO = mapper.Map<MovieDto>(createdMovie);
 
             return CreatedAtAction(nameof(GetMovie), new { id = movieDTO.Id }, movieDTO);
         }
