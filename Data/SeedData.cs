@@ -27,6 +27,9 @@ namespace MovieCardsAPI.Data {
             var genres = GenerateGenres(genreList);
             await context.AddRangeAsync(genres);
 
+            var movies = GenerateMovies(500, (List<Director>)directors, (List<Actor>)actors, (List<Genre>)genres);
+            await context.AddRangeAsync(movies);
+
             //var contactInfo = GenerateContactInfo(100, directors);
             //await context.AddRangeAsync(contactInfo);
 
@@ -71,6 +74,39 @@ namespace MovieCardsAPI.Data {
                 }); ;
             }
             return genres;
+        }
+
+        private static IEnumerable<Movie> GenerateMovies(int generationAmount, List<Director> directorList, List<Actor> actorList, List<Genre> genreList ) {
+            var movies = new List<Movie>(generationAmount);
+            var random = new Random();
+
+            for (int i = 0; i < generationAmount; i++) {
+                var title = faker.Hacker.Verb() + " " + faker.Hacker.Adjective() + " " + faker.Hacker.Noun();
+                var rating = random.Next(0, 10);
+                var releaseDate = faker.Date.Past(50, DateTime.Now);
+                var description = faker.Lorem.Sentences(3);
+                var director = faker.PickRandom<Director>(directorList);
+                //var actors = faker.PickRandom<Actor>(actorList, 3);
+                //var actors = actorList.OrderBy(x => random.Next()).Take(3);
+
+                
+                //var genres = faker.PickRandom<Genre>(genreList, 2);
+                //var genres = genreList.OrderBy(x => random.Next()).Take(2);
+
+                var movie = new Movie() {
+                    Title = title,
+                    Rating = (short)rating,
+                    ReleaseDate = releaseDate,
+                    Description = description,
+                    Director = director,
+                    /*Actors = (ICollection<Actor>)actors,
+                    Genres = (ICollection<Genre>)genres*/
+                };
+
+                movies.Add(movie);
+
+            }
+            return movies;
         }
 
         /*private static IEnumerable<ContactInformation> GenerateContactInfo(int generationAmount, IEnumerable<Director> directors) {

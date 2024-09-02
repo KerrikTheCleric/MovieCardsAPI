@@ -17,6 +17,6 @@ namespace MovieCardsAPI.Models.Dtos {
     }
     public record MovieForCreationDTO(string Title, short Rating, DateTime ReleaseDate, string Description, long DirectorId);
 
-    public record MovieForUpdateDTO(long Id, string Title, short Rating, DateTime ReleaseDate, string Description);
+    public record MovieForUpdateDTO(long Id, string Title, short Rating, DateTime ReleaseDate, string Description, long DirectorId);
 
 }
