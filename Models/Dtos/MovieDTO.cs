@@ -1,6 +1,4 @@
-﻿
-
-using MovieCardsAPI.Models.Entities;
+﻿using MovieCardsAPI.Models.Entities;
 
 namespace MovieCardsAPI.Models.Dtos {
     public record MovieDto(long Id, string Title, short Rating, DateTime ReleaseDate, string Description, string DirectorName);

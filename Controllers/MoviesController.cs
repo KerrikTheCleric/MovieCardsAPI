@@ -29,6 +29,7 @@ namespace MovieCardsAPI.Controllers {
         // GET: api/Movies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies() {
+            //var test = _context.Movies.Include(m => m.Actors).Include(m => m.Genres).ToList();
             var dto = _context.Movies.Select(s => new MovieDto(s.Id, s.Title, s.Rating, s.ReleaseDate, s.Description, s.Director.Name));
             return Ok(await dto.ToListAsync());
         }

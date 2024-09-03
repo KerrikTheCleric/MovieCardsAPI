@@ -1,7 +1,5 @@
-﻿namespace MovieCardsAPI.Models.Entities
-{
-    public class Movie
-    {
+﻿namespace MovieCardsAPI.Models.Entities {
+    public class Movie {
         public long Id { get; set; }
         public string Title { get; set; }
         public short Rating { get; set; }

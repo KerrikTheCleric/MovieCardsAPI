@@ -9,9 +9,6 @@ namespace MovieCardsAPI.Extensions {
                 var serviceProvider = scope.ServiceProvider;
                 var context = serviceProvider.GetRequiredService<MovieContext>();
 
-                //await context.Database.EnsureDeletedAsync();
-                //await context.Database.MigrateAsync();
-
                 try {
                     await SeedData.InitAsync(context);
                 } catch (Exception ex) {

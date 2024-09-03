@@ -2,7 +2,6 @@
 using MovieCardsAPI.Models.Dtos;
 using MovieCardsAPI.Models.Entities;
 
-
 namespace MovieCardsAPI.Data {
     public class MapperProfile : Profile {
         public MapperProfile() {
@@ -10,9 +9,7 @@ namespace MovieCardsAPI.Data {
 
             CreateMap<Movie, MovieForUpdateDTO>().ReverseMap();
 
-            CreateMap<Movie, MovieDto>()
-                .ConstructUsing(src => new MovieDto(src.Id, src.Title, src.Rating, src.ReleaseDate, src.Description, src.Director.Name));
-
+            CreateMap<Movie, MovieDto>().ConstructUsing(src => new MovieDto(src.Id, src.Title, src.Rating, src.ReleaseDate, src.Description, src.Director.Name));
 
             CreateMap<Movie, MovieDetailsDTO>().ReverseMap();
         }
