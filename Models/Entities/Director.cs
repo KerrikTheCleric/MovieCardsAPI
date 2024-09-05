@@ -1,6 +1,9 @@
-﻿namespace MovieCardsAPI.Models.Entities {
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MovieCardsAPI.Models.Entities {
     public class Director {
         public long Id { get; set; }
+        [Required]
         public string? Name { get; set; }
         public DateTime DateOfBirth { get; set; }
 
