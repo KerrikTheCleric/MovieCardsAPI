@@ -12,6 +12,12 @@ namespace MovieCardsAPI.Data {
             CreateMap<Movie, MovieDto>().ConstructUsing(src => new MovieDto(src.Id, src.Title, src.Rating, src.ReleaseDate, src.Description, src.Director.Name));
 
             CreateMap<Movie, MovieDetailsDTO>().ReverseMap();
+
+            CreateMap<Director, DirectorDTO>().ConstructUsing(src => new DirectorDTO(src.Name, src.DateOfBirth, src.ContactInformation.Email, src.ContactInformation.PhoneNumber));
+
+            CreateMap<Actor, ActorDTO>().ReverseMap();
+
+            CreateMap<Genre, GenreDTO>().ReverseMap();
         }
     }
 }
