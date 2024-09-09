@@ -1,4 +1,5 @@
 ﻿using MovieCardsAPI.Models.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieCardsAPI.Models.Dtos {
     public record MovieDto(
@@ -22,6 +23,7 @@ namespace MovieCardsAPI.Models.Dtos {
     }
     public record MovieForCreationDTO(
         string Title,
+        [Required, Range(0, 10)]
         short Rating,
         DateTime ReleaseDate,
         string Description,
@@ -31,6 +33,7 @@ namespace MovieCardsAPI.Models.Dtos {
     public record MovieForUpdateDTO(
         long Id,
         string Title,
+        [Required, Range(0, 10)]
         short Rating,
         DateTime ReleaseDate,
         string Description,

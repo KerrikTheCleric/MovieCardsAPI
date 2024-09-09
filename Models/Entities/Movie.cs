@@ -5,9 +5,9 @@ namespace MovieCardsAPI.Models.Entities {
         public long Id { get; set; }
         [Required]
         public string Title { get; set; }
-
-        [Range(0, 10)]
+        [Required]
         public short Rating { get; set; }
+        [Required]
         public DateTime ReleaseDate { get; set; }
         public string Description { get; set; }
 
