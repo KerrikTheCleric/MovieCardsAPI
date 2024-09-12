@@ -18,5 +18,14 @@ namespace MovieCardsAPI.Models.Entities {
         public Director Director { get; set; }
         public ICollection<Actor> Actors { get; set; }
         public ICollection<Genre> Genres { get; set; }
+
+        /*public bool ContainsGenre(string searchGenre) {
+            foreach (var genre in Genres) {
+                if (genre.Name == searchGenre) {
+                    return true;
+                }
+            }
+            return false;
+        }*/
     }
 }

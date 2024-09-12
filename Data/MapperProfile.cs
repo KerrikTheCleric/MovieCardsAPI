@@ -9,6 +9,8 @@ namespace MovieCardsAPI.Data {
 
             CreateMap<Movie, MovieForUpdateDTO>().ReverseMap();
 
+            CreateMap<Movie, MovieDtoExtra>().ReverseMap();
+
             CreateMap<Movie, MovieDto>().ConstructUsing(src => new MovieDto(src.Id, src.Title, src.Rating, src.ReleaseDate, src.Description, src.Director.Name));
 
             CreateMap<Movie, MovieDetailsDTO>().ReverseMap();

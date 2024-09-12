@@ -28,16 +28,97 @@ namespace MovieCardsAPI.Controllers {
         }
 
         // GET: api/Movies
+       /* [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MovieDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        [SwaggerOperation(Summary = "Get all movies by search", Description = "Get all available movies by search", OperationId = "GetMoviesSearch")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Movies found", Type = typeof(MovieDto))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No movies found")]
+        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMoviesSearch([FromQuery] string? title = "", string? genre = "") {
+
+            //var test = _context.Movies.Include(m => m.Actors).Include(m => m.Genres).ToList();
+            var dto = _context.Movies.Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+
+
+            if (dto == null) {
+                return NotFound();
+            }
+
+            return Ok(await dto.ToListAsync());
+        }*/
+
+        // GET: api/Movies/
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MovieDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        [SwaggerOperation(Summary = "Get all movies", Description = "Get all available movies", OperationId = "GetMovies")]
+        [SwaggerOperation(Summary = "Get all movies by search", Description = "Get all available movies by search", OperationId = "GetMoviesSearch")]
         [SwaggerResponse(StatusCodes.Status200OK, "Movies found", Type = typeof(MovieDto))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No movies found")]
-        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies() {
+        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMoviesSearch([FromQuery] bool? includeActors=false, string? searchTitle="", string? searchGenre="") {
+
+            IQueryable<MovieDto> dto = null;
+            //string[] genreList = ["Action", "Comedy", "Drama", "Fantasy", "Horror", "Mystery", "Romance", "Thriller", "Western", "Horror", "Science Fiction", "Apocalypse", "Family", "Martial Arts", "Sports",];
+
+            /*if (includeActors) {
+                dto = dto.Include(m => m.Actors);
+            }*/
+
+
+
+            if (searchTitle != "" && searchGenre != "") {
+                //dto = _context.Movies.Where(m => m.Title.Contains(title), m.Genres.ToString().Contains(genre)).Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+                dto = _context.Movies.Where(m => m.Title.Contains(searchTitle) && m.Genres.Any(g => searchGenre.Contains(g.Name))).Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+
+                //dto = _context.Movies.Where(m => m.Title.Contains(searchTitle) && m.Genres.Any(g => searchGenre.Contains(g.Name))).Select(m => new MovieDtoExtra(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Actors));
+
+
+
+                //dto = await mapper.ProjectTo<MovieDtoExtra>(_context.Movies.Where(m => m.Title.Contains(searchTitle) && m.Genres.Any(g => searchGenre.Contains(g.Name)).FirstOrDefaultAsync();
+                //dto = dto.Include(m => m.Actors);
+
+            } else if (searchTitle != "" && searchGenre == "") {
+                dto = _context.Movies.Where(m => m.Title.Contains(searchTitle)).Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+                //dto = _context.Movies.Include(m => m.Actors).Where(m => m.Title.Contains(searchTitle)).Select(m => new MovieDtoExtra(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name, m.Actors.Select(a => new ActorDTO(a.Name, a.DateOfBirth)))).ToList();
+
+            } else if (searchTitle == "" && searchGenre != "") {
+                //dto = _context.Movies.Where(m => m.Genres.Contains(genre)).Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+                //dto = _context.Movies.Where(m => m.Genres.ToList().Where(g => g.Name.Equals(genre))).Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+                dto = _context.Movies.Include(m => m.Genres).
+                    Where(m => m.Genres.Any(g => searchGenre.Contains(g.Name))).
+                    Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+            } else {
+                dto = _context.Movies.Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+            }
+
+
+            //dto = dto.Include(m => m.Actors);
+
+            // http://localhost:5095/api/movies?page=5
+
             //var test = _context.Movies.Include(m => m.Actors).Include(m => m.Genres).ToList();
-            var dto = _context.Movies.Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+
+            /*var dto = _context.Movies
+                .Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name))
+                .Where(m => m.Title.Contains(title));*/
+            //dto = _context.Movies.Where(m => m.Title.Contains(title, m.Genres.Contains()).Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+
+
+
+            //var dto = _context.Movies.Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name));
+            /* var dto = _context.Movies.Include(m => m.Actors).Include(m => m.Genres).Select(m => new MovieDto(m.Id, m.Title, m.Rating, m.ReleaseDate, m.Description, m.Director.Name);
+
+
+             if (search) {
+                 if (searchTitle != string.Empty) {
+                     dto = dto.Where(m => m.Title.Contains(searchTitle)).ToList();
+                 }
+
+                 if (searchGenre != string.Empty) {
+                     //dto = dto.Include(m => m.Genres).Where();
+                 }
+             }*/
 
             if (dto == null) {
                 return NotFound();
@@ -182,5 +263,14 @@ namespace MovieCardsAPI.Controllers {
         private bool MovieExists(long id) {
             return _context.Movies.Any(m => m.Id == id);
         }
+
+        /*private bool ContainsGenre(Movie m, string searchGenre) {
+            foreach (var genre in m.Genres) {
+                if(genre.Name == searchGenre) {
+                    return true;
+                }
+            }
+            return false;
+        }*/
     }
 }

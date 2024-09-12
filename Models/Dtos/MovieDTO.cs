@@ -11,6 +11,16 @@ namespace MovieCardsAPI.Models.Dtos {
         string DirectorName
        );
 
+    public record MovieDtoExtra(
+        long Id,
+        string Title,
+        short Rating,
+        DateTime ReleaseDate,
+        string Description,
+        string DirectorName,
+        IEnumerable<ActorDTO> Actors
+       );
+
     public class MovieDetailsDTO {
         public long Id { get; set; }
         public string Title { get; set; }
