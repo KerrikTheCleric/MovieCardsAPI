@@ -9,9 +9,5 @@ namespace MovieCardsAPI.Models.Entities {
 
         //Navigationprop
         public ICollection<Movie> Movies { get; set; }
-
-        /*public override string ToString() {
-            return Name;
-        }*/
     }
 }
