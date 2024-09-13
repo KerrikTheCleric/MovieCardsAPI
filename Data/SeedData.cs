@@ -36,7 +36,7 @@ namespace MovieCardsAPI.Data {
         private static IEnumerable<Director> GenerateDirectors(int generationAmount) {
             var faker = new Faker<Director>("sv").Rules((faker, director) => {
                 director.Name = faker.Name.FullName();
-                director.DateOfBirth = faker.Date.Past(50, DateTime.Now);
+                director.DateOfBirth = DateOnly.FromDateTime(faker.Date.Past(50, DateTime.Now));
                 director.ContactInformation = new ContactInformation {
                     Email = faker.Internet.Email(),
                     PhoneNumber = faker.Phone.PhoneNumber(),
@@ -48,7 +48,7 @@ namespace MovieCardsAPI.Data {
         private static IEnumerable<Actor> GenerateActors(int generationAmount) {
             var faker = new Faker<Actor>("sv").Rules((faker, actor) => {
                 actor.Name = faker.Name.FullName();
-                actor.DateOfBirth = faker.Date.Past(50, DateTime.Now);
+                actor.DateOfBirth = DateOnly.FromDateTime(faker.Date.Past(50, DateTime.Now));
             });
             return faker.Generate(generationAmount);
         }
@@ -70,7 +70,7 @@ namespace MovieCardsAPI.Data {
             for (int i = 0; i < generationAmount; i++) {
                 var title = faker.Hacker.Verb() + " " + faker.Hacker.Adjective() + " " + faker.Hacker.Noun();
                 var rating = random.Next(0, 10);
-                var releaseDate = faker.Date.Past(50, DateTime.Now);
+                var releaseDate = DateOnly.FromDateTime(faker.Date.Past(50, DateTime.Now));
                 var description = faker.Lorem.Sentences(3);
                 var director = faker.PickRandom<Director>(directorList);
                 var actors = actorList.OrderBy(x => random.Next()).Take(3);

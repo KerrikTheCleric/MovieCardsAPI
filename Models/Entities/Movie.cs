@@ -8,7 +8,7 @@ namespace MovieCardsAPI.Models.Entities {
         [Required]
         public short Rating { get; set; }
         [Required]
-        public DateTime ReleaseDate { get; set; }
+        public DateOnly ReleaseDate { get; set; }
         public string Description { get; set; }
 
         //Foreign Key

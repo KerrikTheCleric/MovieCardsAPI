@@ -6,7 +6,7 @@ namespace MovieCardsAPI.Models.Dtos {
         long Id,
         string Title,
         short Rating,
-        DateTime ReleaseDate,
+        DateOnly ReleaseDate,
         string Description,
         string DirectorName
         );
@@ -18,7 +18,7 @@ namespace MovieCardsAPI.Models.Dtos {
         public long Id { get; set; }
         public string Title { get; set; }
         public short Rating { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateOnly ReleaseDate { get; set; }
         public string Description { get; set; }
         public string DirectorName { get; set; }
         public IEnumerable<ActorDTO> Actors { get; set; }
@@ -28,7 +28,7 @@ namespace MovieCardsAPI.Models.Dtos {
         public long Id { get; set; }
         public string Title { get; set; }
         public short Rating { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateOnly ReleaseDate { get; set; }
         public string Description { get; set; }
         public DirectorDTO Director { get; set; }
         public IEnumerable<ActorDTO> Actors { get; set; }
@@ -38,7 +38,7 @@ namespace MovieCardsAPI.Models.Dtos {
         string Title,
         [Required, Range(0, 10)]
         short Rating,
-        DateTime ReleaseDate,
+        DateOnly ReleaseDate,
         string Description,
         long DirectorId
         );
@@ -48,14 +48,14 @@ namespace MovieCardsAPI.Models.Dtos {
         string Title,
         [Required, Range(0, 10)]
         short Rating,
-        DateTime ReleaseDate,
+        DateOnly ReleaseDate,
         string Description,
         long DirectorId
         );
 
-    public record DirectorDTO(string Name, DateTime DateOfBirth, string Email, string PhoneNumber);
+    public record DirectorDTO(string Name, DateOnly DateOfBirth, string Email, string PhoneNumber);
 
-    public record ActorDTO(string Name, DateTime DateOfBirth);
+    public record ActorDTO(string Name, DateOnly DateOfBirth);
 
     public record GenreDTO(string Name);
 
