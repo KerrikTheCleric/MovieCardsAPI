@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -51,12 +52,14 @@ namespace MovieCardsAPI.Controllers {
         // GET: api/Movies/
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MovieDtoExtra))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         [SwaggerOperation(Summary = "Get all movies by search", Description = "Get all available movies by search", OperationId = "GetMoviesSearch")]
         [SwaggerResponse(StatusCodes.Status200OK, "Movies found", Type = typeof(MovieDtoExtra))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad request")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "No movies found")]
-        public async Task<ActionResult<IEnumerable<MovieDtoExtra>>> GetMoviesSearch([FromQuery] bool includeActors = false, string? searchTitle = "", string? searchGenre = "") {
+        public async Task<ActionResult<IEnumerable<MovieDtoExtra>>> GetMoviesSearch([FromQuery] bool includeActors = false, string? searchTitle = "", string? searchGenre = "", string? sortBy = "") {
 
             IQueryable<MovieDtoExtra> dto = null;
 
@@ -158,6 +161,30 @@ namespace MovieCardsAPI.Controllers {
                         DirectorName = m.Director.Name
                     });
                 }
+            }
+
+            var sortingParameters = sortBy.Split("-");
+
+            if (!sortingParameters[0].Equals("")) {
+
+                if (!SortParametersAreValid(sortingParameters)) { return BadRequest("The only valid sorting parameters are \"Title\", \"Title desc\", \"ReleaseDate\", \"ReleaseDate desc\", \"Rating\" & \"Rating desc\" separated by \'-\'"); }
+
+                switch (sortingParameters.Length) {
+                    case 1:
+                        dto = dto.OrderBy(sortingParameters[0]);
+                        break;
+                    case 2:
+                        dto = dto.OrderBy(sortingParameters[0]).ThenBy(sortingParameters[1]);
+                        break;
+                    case 3:
+                        dto = dto.OrderBy(sortingParameters[0]).ThenBy(sortingParameters[1]).ThenBy(sortingParameters[2]);
+                        break;
+                    default:
+                        return BadRequest("More than three sorting parameters are not allowed");
+
+                }
+            } else if (sortingParameters.Length > 1) {
+                return BadRequest("The only valid sorting parameters are \"Title\", \"Title desc\", \"ReleaseDate\", \"ReleaseDate desc\", \"Rating\" & \"Rating desc\" separated by \'-\'");
             }
 
             if (dto == null) {
@@ -302,6 +329,15 @@ namespace MovieCardsAPI.Controllers {
 
         private bool MovieExists(long id) {
             return _context.Movies.Any(m => m.Id == id);
+        }
+
+        private bool SortParametersAreValid(string[] parameters) {
+            foreach (string parameter in parameters) {
+                if (!parameter.Equals("Title") && !parameter.Equals("Title desc") && !parameter.Equals("ReleaseDate") && !parameter.Equals("ReleaseDate desc") && !parameter.Equals("Rating") && !parameter.Equals("Rating desc")) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
