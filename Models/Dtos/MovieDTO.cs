@@ -1,4 +1,5 @@
 ﻿using MovieCardsAPI.Models.Entities;
+using MovieCardsAPI.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace MovieCardsAPI.Models.Dtos {
@@ -35,6 +36,7 @@ namespace MovieCardsAPI.Models.Dtos {
         public IEnumerable<GenreDTO> Genres { get; set; }
     }
     public record MovieForCreationDTO(
+        [Required, UniqueMovieTitle]
         string Title,
         [Required, Range(0, 10)]
         short Rating,
@@ -45,6 +47,7 @@ namespace MovieCardsAPI.Models.Dtos {
 
     public record MovieForUpdateDTO(
         long Id,
+        [Required, UniqueMovieTitle]
         string Title,
         [Required, Range(0, 10)]
         short Rating,

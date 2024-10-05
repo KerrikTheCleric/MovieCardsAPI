@@ -211,6 +211,7 @@ namespace MovieCardsAPI.Controllers {
             return Ok(dto);
         }
 
+        // GET: api/Movies/5/details
         [HttpGet("{id}/details")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MovieDetailsDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
