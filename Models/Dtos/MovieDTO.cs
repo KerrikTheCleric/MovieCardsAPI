@@ -40,6 +40,7 @@ namespace MovieCardsAPI.Models.Dtos {
         string Title,
         [Required, Range(0, 10)]
         short Rating,
+        [CorrectMovieReleasedate]
         DateOnly ReleaseDate,
         string Description,
         long DirectorId
@@ -51,6 +52,7 @@ namespace MovieCardsAPI.Models.Dtos {
         string Title,
         [Required, Range(0, 10)]
         short Rating,
+        [CorrectMovieReleasedate]
         DateOnly ReleaseDate,
         string Description,
         long DirectorId
